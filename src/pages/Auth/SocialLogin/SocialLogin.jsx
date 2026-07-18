@@ -12,7 +12,7 @@ const SocialLogin = () =>{
                 console.log(error)
             })
 
-    }
+    };
     return(
         <div className="text-center pd-8">
             <p className="mb-2">OR</p>
