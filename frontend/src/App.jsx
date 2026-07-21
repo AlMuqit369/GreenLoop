@@ -12,6 +12,9 @@ import MyListings from './pages/MyListings';
 import AdminCategories from './pages/AdminCategories';
 import MaterialGuide from './pages/MaterialGuide';
 import Transactions from './pages/Transactions';
+import EcoPoints from './pages/EcoPoints';
+import RewardRedemption from './pages/RewardRedemption';
+import AdminRewards from './pages/AdminRewards';
 
 const RedirectIfLoggedIn = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -38,9 +41,12 @@ function App() {
             <Route path="/my-listings" element={<MyListings />} />
             <Route path="/history" element={<Transactions />} />
             <Route path="/material-guide" element={<MaterialGuide />} />
+            <Route path="/ecopoints" element={<EcoPoints />} />
+            <Route path="/rewards" element={<RewardRedemption />} />
           </Route>
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
             <Route path="/admin/categories" element={<AdminCategories />} />
+            <Route path="/admin/rewards" element={<AdminRewards />} />
           </Route>
         </Routes>
       </AuthProvider>
