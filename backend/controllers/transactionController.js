@@ -21,19 +21,29 @@ exports.createTransaction = async (req, res) => {
     if (listing.status !== 'Available' && listing.status !== 'available') return res.status(400).json({ success: false, message: 'Listing not available' });
     if (listing.owner.toString() === req.user._id.toString()) return res.status(400).json({ success: false, message: 'Cannot claim your own listing' });
     
-    listing.status = 'Pending';
-    await listing.save();
-    
     const points = Math.round((listing.category.defaultPointsPerKg || 10) * listing.weight);
     const amount = offeredAmount || listing.price;
     const status = offeredAmount ? 'Negotiating' : 'Pending';
     
-    const tx = await Transaction.create({
-      listing: listing._id, seller: listing.owner, buyer: req.user._id,
-      category: listing.category._id, weight: listing.weight, unit: listing.unit,
-      totalAmount: listing.price, offeredAmount: amount, pointsEarned: points, status,
-      history: [{ action: offeredAmount ? 'Offer' : 'Claim', actor: req.user._id, amount }]
-    });
+    let tx;
+    try {
+      tx = await Transaction.create({
+        listing: listing._id, seller: listing.owner, buyer: req.user._id,
+        category: listing.category._id, weight: listing.weight, unit: listing.unit,
+        totalAmount: listing.price, offeredAmount: amount, pointsEarned: points, status,
+        history: [{ action: offeredAmount ? 'Offer' : 'Claim', actor: req.user._id, amount }]
+      });
+    } catch (txError) {
+      return res.status(500).json({ success: false, message: txError.message });
+    }
+    
+    try {
+      listing.status = 'Pending';
+      await listing.save();
+    } catch (listingError) {
+      await Transaction.findByIdAndDelete(tx._id);
+      return res.status(500).json({ success: false, message: listingError.message });
+    }
     
     const populated = await Transaction.findById(tx._id)
       .populate('listing').populate('seller', 'name email role ecoPoints')

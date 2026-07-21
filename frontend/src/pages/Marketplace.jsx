@@ -46,6 +46,17 @@ const Marketplace = () => {
     setClaimingId(null);
     setTimeout(() => setMsg(''), 4000);
   };
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this listing from the marketplace?')) return;
+    try {
+      await api.delete(`/listings/${id}`);
+      setListings(listings.filter(l => l._id !== id));
+      setMsg('Listing deleted successfully.');
+    } catch (err) {
+      setMsg('Failed to delete listing.');
+    }
+    setTimeout(() => setMsg(''), 4000);
+  };
   const isBuyer = user && ['collector','recycling_company','admin','business'].includes(user.role);
 
   return (
@@ -91,6 +102,11 @@ const Marketplace = () => {
                 {isBuyer && l.status === 'Available' && l.owner?._id?.toString() !== user?.id?.toString() && (
                   <button onClick={() => handleClaim(l._id)} className="btn-claim" disabled={claimingId === l._id}>
                     {claimingId === l._id ? 'Claiming...' : 'Claim Pickup'}
+                  </button>
+                )}
+                {user && l.owner?._id?.toString() === user?.id?.toString() && l.status === 'Available' && (
+                  <button onClick={() => handleDelete(l._id)} style={{background: '#ef4444', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '6px', cursor: 'pointer', marginTop: '10px', width: '100%', fontWeight: '600'}}>
+                    Delete Listing
                   </button>
                 )}
               </div>
