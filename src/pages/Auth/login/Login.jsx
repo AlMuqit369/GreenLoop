@@ -1,46 +1,135 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Link, useLocation, useNavigate } from "react-router";
+import Swal from "sweetalert2";
+import axiosPublic from "../../../api/axiosPublic";
 import useAuth from "../../../hooks/useAuth";
-import { Link } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
-  const { register, handleSubmit, formState: {errors} } = useForm();
-  const {signInUser} = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleLogin = (data) => {
-    console.log('form data',data);
-    signInUser(data.email, data.password)
-    .then(result =>{
-      console.log(result.user)
-    })
-    .catch(error =>{
-      console.log(error)
-    })
-  }
+  const { signInUser } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  const handleLogin = async (data) => {
+    try {
+      // Firebase Login
+      const result = await signInUser(data.email, data.password);
+
+      // Get User From MongoDB
+      const res = await axiosPublic.get("/users");
+
+      const currentUser = res.data.find(
+        (user) => user.email === result.user.email
+      );
+
+      console.log("Current User:", currentUser);
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: `Welcome ${currentUser?.name || ""}`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      navigate(from, { replace: true });
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.message,
+      });
+    }
+  };
 
   return (
-     <div className="card bg-base-100 w-full max-auto max-w-sm shrink-0 shadow-2xl">
-      <h3 className="text-3xl text-center">Welcome back </h3>
-      <p className="text-center">Please Login</p>
-      <form className="card-body" onSubmit={handleSubmit(handleLogin)}>
+    <div className="card bg-base-100 w-full max-w-md mx-auto shadow-2xl">
+
+      <h2 className="text-3xl font-bold text-center mt-6">
+        Login
+      </h2>
+
+      <form
+        className="card-body"
+        onSubmit={handleSubmit(handleLogin)}
+      >
         <fieldset className="fieldset">
-          <label className="label">Email</label>
-          <input type="email"{...register('email',{required:true})} className="input" placeholder="Email" />
-          {errors.email?.type === 'required' && <p className= 'text-red-500'>Email is required </p>}
-          <label className="label">Password</label>
-          <input type="password"{...register('password',{required:true, minLength:6})} className="input" placeholder="Password" />
-          {errors.password?.type === "minLength" && (
-          <p className="text-red-500">
-           Password must be 6 characters or longer
+
+          {/* Email */}
+
+          <label className="label">
+            Email
+          </label>
+
+          <input
+            type="email"
+            className="input input-bordered"
+            placeholder="Enter Email"
+            {...register("email", {
+              required: "Email is required",
+            })}
+          />
+
+          {errors.email && (
+            <p className="text-red-500">
+              {errors.email.message}
+            </p>
+          )}
+
+          {/* Password */}
+
+          <label className="label">
+            Password
+          </label>
+
+          <input
+            type="password"
+            className="input input-bordered"
+            placeholder="Password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+          />
+
+          {errors.password && (
+            <p className="text-red-500">
+              {errors.password.message}
+            </p>
+          )}
+
+          <button className="btn btn-success mt-5">
+            Login
+          </button>
+
+          <p className="mt-4 text-center">
+            New to GreenLoop?{" "}
+            <Link
+              className="text-blue-600 font-semibold"
+              to="/register"
+            >
+              Register
+            </Link>
           </p>
-           )}
-          <div><a className="link link-hover">Forgot password?</a></div>
-          <button className="btn btn-neutral mt-4">Login</button>
+
         </fieldset>
-        <p>New to Zap Shift <Link className= "text-blue-400 underline" to="/register">Register</Link></p>
       </form>
-      <SocialLogin> </SocialLogin>
+
+      <SocialLogin />
     </div>
   );
 };
