@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { FaUsersCog } from "react-icons/fa";
 import axiosPublic from "../../api/axiosPublic";
 import Swal from "sweetalert2";
+import PageHeader from "../../components/ui/PageHeader";
+import GlassPanel from "../../components/ui/GlassPanel";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
 
   const loadUsers = () => {
-    axiosPublic.get("/all-users").then((res) => {
-      setUsers(res.data);
-    });
+    axiosPublic
+      .get("/all-users")
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -33,15 +39,13 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="p-6">
+    <div>
 
-      <h1 className="text-4xl font-bold mb-8">
-        User Management
-      </h1>
+      <PageHeader title="User Management" subtitle="Assign roles across every registered account." icon={<FaUsersCog />} />
 
-      <div className="overflow-x-auto">
+      <GlassPanel className="overflow-x-auto">
 
-        <table className="table table-zebra">
+        <table className="table table-zebra eco-table">
 
           <thead>
 
@@ -105,7 +109,7 @@ const UserManagement = () => {
 
         </table>
 
-      </div>
+      </GlassPanel>
 
     </div>
   );

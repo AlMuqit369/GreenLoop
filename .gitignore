@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+
+# Claude Code local session config (machine-specific, references other projects)
+.claude/
 
 # Editor directories and files
 .vscode/*

@@ -6,6 +6,8 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signOut,
+  updateProfile,
+  updatePassword,
 } from "firebase/auth";
 
 import { auth } from "../../firebase/firebase.init";
@@ -41,6 +43,19 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  // Update Name / Photo
+  const updateUserProfile = async (updates) => {
+    await updateProfile(auth.currentUser, updates);
+    // onAuthStateChanged doesn't re-fire on profile edits, so refresh
+    // the local user object manually to reflect the new values.
+    setUser({ ...auth.currentUser });
+  };
+
+  // Change Password
+  const changeUserPassword = (newPassword) => {
+    return updatePassword(auth.currentUser, newPassword);
+  };
+
   // Check Logged In User
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -58,6 +73,8 @@ const AuthProvider = ({ children }) => {
     signInUser,
     signInGoogle,
     logoutUser,
+    updateUserProfile,
+    changeUserPassword,
   };
 
   return (

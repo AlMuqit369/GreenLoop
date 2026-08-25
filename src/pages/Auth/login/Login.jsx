@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import axiosPublic from "../../../api/axiosPublic";
 import useAuth from "../../../hooks/useAuth";
 import SocialLogin from "../SocialLogin/SocialLogin";
+import { getAuthErrorMessage } from "../../../utils/firebaseErrors";
 
 const Login = () => {
   const {
@@ -25,14 +26,17 @@ const Login = () => {
       // Firebase Login
       const result = await signInUser(data.email, data.password);
 
-      // Get User From MongoDB
-      const res = await axiosPublic.get("/users");
-
-      const currentUser = res.data.find(
-        (user) => user.email === result.user.email
-      );
-
-      console.log("Current User:", currentUser);
+      // Best-effort profile lookup just for the welcome message — a
+      // failure here shouldn't block a successful login from proceeding.
+      let currentUser;
+      try {
+        const res = await axiosPublic.get("/users");
+        currentUser = res.data.find(
+          (user) => user.email === result.user.email
+        );
+      } catch (lookupError) {
+        console.log(lookupError);
+      }
 
       Swal.fire({
         icon: "success",
@@ -48,23 +52,26 @@ const Login = () => {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: error.message,
+        text: getAuthErrorMessage(error),
       });
     }
   };
 
   return (
-    <div className="card bg-base-100 w-full max-w-md mx-auto shadow-2xl">
+    <div className="eco-glass w-full max-w-md mx-auto rounded-3xl">
 
-      <h2 className="text-3xl font-bold text-center mt-6">
-        Login
+      <h2 className="text-3xl font-bold text-center mt-8 text-white">
+        Welcome Back
       </h2>
+      <p className="text-center eco-muted text-sm mt-1">
+        Log in to continue recycling smarter.
+      </p>
 
       <form
-        className="card-body"
+        className="p-8"
         onSubmit={handleSubmit(handleLogin)}
       >
-        <fieldset className="fieldset">
+        <fieldset className="fieldset space-y-1">
 
           {/* Email */}
 
@@ -74,7 +81,7 @@ const Login = () => {
 
           <input
             type="email"
-            className="input input-bordered"
+            className="input eco-input w-full"
             placeholder="Enter Email"
             {...register("email", {
               required: "Email is required",
@@ -82,20 +89,20 @@ const Login = () => {
           />
 
           {errors.email && (
-            <p className="text-red-500">
+            <p className="text-rose-400 text-sm">
               {errors.email.message}
             </p>
           )}
 
           {/* Password */}
 
-          <label className="label">
+          <label className="label mt-2">
             Password
           </label>
 
           <input
             type="password"
-            className="input input-bordered"
+            className="input eco-input w-full"
             placeholder="Password"
             {...register("password", {
               required: "Password is required",
@@ -107,19 +114,19 @@ const Login = () => {
           />
 
           {errors.password && (
-            <p className="text-red-500">
+            <p className="text-rose-400 text-sm">
               {errors.password.message}
             </p>
           )}
 
-          <button className="btn btn-success mt-5">
+          <button className="w-full text-white rounded-xl py-3 mt-5 font-semibold eco-gradient-btn">
             Login
           </button>
 
-          <p className="mt-4 text-center">
+          <p className="mt-4 text-center eco-muted">
             New to GreenLoop?{" "}
             <Link
-              className="text-blue-600 font-semibold"
+              className="text-emerald-400 font-semibold hover:text-emerald-300"
               to="/register"
             >
               Register

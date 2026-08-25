@@ -2,8 +2,7 @@ import React from "react";
 import { Navigate } from "react-router";
 import useRole from "../hooks/useRole";
 
-const AdminRoute = ({ children }) => {
-
+const RoleRoute = ({ allowedRoles, children }) => {
   const [role, loading] = useRole();
 
   if (loading) {
@@ -14,11 +13,11 @@ const AdminRoute = ({ children }) => {
     );
   }
 
-  if (role !== "Admin") {
+  if (!allowedRoles.includes(role)) {
     return <Navigate to="/" replace />;
   }
 
   return children;
 };
 
-export default AdminRoute;
+export default RoleRoute;

@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router";
+import { motion } from "framer-motion";
 import {
   FaRecycle,
   FaTruck,
@@ -9,233 +11,221 @@ import {
   FaArrowRight,
   FaCheckCircle,
   FaAward,
-  FaGlobe,
 } from "react-icons/fa";
+import FloatingLeaves from "../../../components/FloatingLeaves";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
 
 const Home = () => {
   return (
     <div className="w-full overflow-hidden">
       {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 text-white py-32 px-6 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-emerald-700 via-green-700 to-teal-800 text-white py-32 px-6 overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-yellow-300 rounded-full blur-3xl animate-pulse delay-700"></div>
         </div>
+        <FloatingLeaves />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
+        <motion.div
+          className="max-w-7xl mx-auto text-center relative z-10"
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.div
+            variants={fadeUp}
+            className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium"
+          >
             🌱 Join 50,000+ eco-conscious users
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+          </motion.div>
+
+          <motion.h1
+            variants={fadeUp}
+            className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight"
+          >
             Smart Recycling Starts with{" "}
             <span className="text-yellow-300 inline-block animate-bounce">
               GreenLoop
             </span>
             <span className="text-6xl ml-2">♻️</span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl max-w-4xl mx-auto mb-10 text-green-50 leading-relaxed">
+          </motion.h1>
+
+          <motion.p
+            variants={fadeUp}
+            className="text-xl md:text-2xl max-w-4xl mx-auto mb-10 text-green-50 leading-relaxed"
+          >
             Connect households, collectors, and businesses in one powerful
             recycling marketplace. Earn rewards, track impact, and build a
             greener future together.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-            <button className="group bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 hover:text-green-800 transition-all duration-300 shadow-2xl hover:shadow-yellow-300/50 hover:scale-105 flex items-center justify-center gap-2">
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
+          >
+            <Link
+              to="/register"
+              className="group bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 hover:text-green-800 transition-all duration-300 shadow-2xl hover:shadow-yellow-300/50 hover:scale-105 flex items-center justify-center gap-2"
+            >
               Get Started Free
               <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
             <button className="border-2 border-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-green-600 transition-all duration-300 backdrop-blur-sm">
               Watch Demo
             </button>
-          </div>
+          </motion.div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+          <motion.div
+            variants={fadeUp}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto"
+          >
             <StatCard number="50K+" label="Active Users" />
             <StatCard number="2.5M+" label="Kg Recycled" />
             <StatCard number="150+" label="Partner Companies" />
             <StatCard number="98%" label="Satisfaction Rate" />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* FEATURES SECTION */}
-      <section className="py-24 px-6 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
-              ✨ PLATFORM FEATURES
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-              Everything You Need to{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">
-                Recycle Smarter
-              </span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Powerful tools designed to make recycling effortless and rewarding
-            </p>
-          </div>
+      <section className="eco-dark relative py-24 px-6 overflow-hidden">
+        <FloatingLeaves />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <SectionIntro
+            badge="✨ PLATFORM FEATURES"
+            title="Everything You Need to"
+            highlight="Recycle Smarter"
+            subtitle="Powerful tools designed to make recycling effortless and rewarding"
+          />
+
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <FeatureCard
-              icon={<FaRecycle size={44} />}
+              icon={<FaRecycle size={40} />}
               title="Waste Marketplace"
               description="List recyclable materials and receive competitive offers from verified collectors in real-time."
-              gradient="from-green-500 to-emerald-500"
             />
-
             <FeatureCard
-              icon={<FaTruck size={44} />}
+              icon={<FaTruck size={40} />}
               title="Smart Pickup Scheduling"
               description="Schedule and track pickups with live GPS tracking and instant notifications."
-              gradient="from-blue-500 to-cyan-500"
             />
-
             <FeatureCard
-              icon={<FaChartLine size={44} />}
+              icon={<FaChartLine size={40} />}
               title="Market Price Dashboard"
               description="Access real-time recycling market analytics and price trends to maximize your returns."
-              gradient="from-purple-500 to-pink-500"
             />
-
             <FeatureCard
-              icon={<FaLeaf size={44} />}
+              icon={<FaLeaf size={40} />}
               title="EcoPoints Rewards"
               description="Earn points for every recycling action and redeem for exclusive rewards and discounts."
-              gradient="from-yellow-500 to-orange-500"
             />
-
             <FeatureCard
-              icon={<FaUsers size={44} />}
+              icon={<FaUsers size={40} />}
               title="Community Campaigns"
               description="Join local sustainability drives, compete on leaderboards, and make a collective impact."
-              gradient="from-red-500 to-rose-500"
             />
-
             <FeatureCard
-              icon={<FaBuilding size={44} />}
+              icon={<FaBuilding size={40} />}
               title="Business Solutions"
               description="Enterprise-grade tools for bulk recycling with compliance certificates and reporting."
-              gradient="from-indigo-500 to-violet-500"
             />
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* HOW IT WORKS SECTION */}
-      <section className="py-24 px-6 bg-white">
+      <section className="eco-dark py-24 px-6 border-t border-emerald-500/10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-4">
-              🚀 SIMPLE PROCESS
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-              How GreenLoop Works
-            </h2>
-          </div>
+          <SectionIntro
+            badge="🚀 SIMPLE PROCESS"
+            title="How GreenLoop Works"
+          />
 
-          <div className="grid md:grid-cols-4 gap-8">
-            <StepCard
-              number="01"
-              title="Sign Up"
-              description="Create your free account in under 2 minutes"
-              icon={<FaUsers />}
-            />
-            <StepCard
-              number="02"
-              title="List Items"
-              description="Post your recyclable materials with photos"
-              icon={<FaRecycle />}
-            />
-            <StepCard
-              number="03"
-              title="Get Offers"
-              description="Receive competitive bids from collectors"
-              icon={<FaChartLine />}
-            />
-            <StepCard
-              number="04"
-              title="Earn Rewards"
-              description="Get paid and earn EcoPoints instantly"
-              icon={<FaAward />}
-            />
-          </div>
+          <motion.div
+            className="grid md:grid-cols-4 gap-8"
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <StepCard number="01" title="Sign Up" description="Create your free account in under 2 minutes" icon={<FaUsers />} />
+            <StepCard number="02" title="List Items" description="Post your recyclable materials with photos" icon={<FaRecycle />} />
+            <StepCard number="03" title="Get Offers" description="Receive competitive bids from collectors" icon={<FaChartLine />} />
+            <StepCard number="04" title="Earn Rewards" description="Get paid and earn EcoPoints instantly" icon={<FaAward />} />
+          </motion.div>
         </div>
       </section>
 
       {/* ROLES SECTION */}
-      <section className="py-24 px-6 bg-gradient-to-br from-green-50 to-emerald-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
-              👥 FOR EVERYONE
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-              Built for Every Stakeholder
-            </h2>
-            <p className="text-xl text-gray-600">
-              Tailored solutions for each role in the recycling ecosystem
-            </p>
-          </div>
+      <section className="eco-dark relative py-24 px-6 border-t border-emerald-500/10 overflow-hidden">
+        <FloatingLeaves />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <SectionIntro
+            badge="👥 FOR EVERYONE"
+            title="Built for Every Stakeholder"
+            subtitle="Tailored solutions for each role in the recycling ecosystem"
+          />
+
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <RoleCard
               emoji="🏠"
               title="Households"
-              features={[
-                "Easy waste listing",
-                "Doorstep pickup",
-                "Instant payments",
-                "Reward points",
-              ]}
-              color="from-green-400 to-emerald-500"
+              features={["Easy waste listing", "Doorstep pickup", "Instant payments", "Reward points"]}
             />
             <RoleCard
               emoji="🚛"
               title="Collectors"
-              features={[
-                "Route optimization",
-                "Bulk purchasing",
-                "Payment gateway",
-                "Customer management",
-              ]}
-              color="from-blue-400 to-cyan-500"
+              features={["Route optimization", "Bulk purchasing", "Payment gateway", "Customer management"]}
             />
             <RoleCard
               emoji="🏭"
               title="Recycling Companies"
-              features={[
-                "Material sourcing",
-                "Quality assurance",
-                "Analytics dashboard",
-                "Supplier network",
-              ]}
-              color="from-purple-400 to-pink-500"
+              features={["Material sourcing", "Quality assurance", "Analytics dashboard", "Supplier network"]}
             />
             <RoleCard
               emoji="🏢"
               title="Businesses"
-              features={[
-                "CSR compliance",
-                "Bulk contracts",
-                "Carbon credits",
-                "Impact reports",
-              ]}
-              color="from-orange-400 to-red-500"
+              features={["CSR compliance", "Bulk contracts", "Carbon credits", "Impact reports"]}
             />
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* IMPACT SECTION */}
-      <section className="py-24 px-6 bg-gradient-to-r from-green-600 to-emerald-700 text-white">
+      <section className="py-24 px-6 bg-gradient-to-r from-green-700 to-emerald-800 text-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5 }}
+            >
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
                 Make a Real Environmental Impact 🌍
               </h2>
@@ -245,25 +235,20 @@ const Home = () => {
                 difference you're making.
               </p>
               <div className="space-y-4">
-                <ImpactItem
-                  icon={<FaCheckCircle />}
-                  text="Reduce landfill waste by up to 80%"
-                />
-                <ImpactItem
-                  icon={<FaCheckCircle />}
-                  text="Lower carbon emissions significantly"
-                />
-                <ImpactItem
-                  icon={<FaCheckCircle />}
-                  text="Support circular economy initiatives"
-                />
-                <ImpactItem
-                  icon={<FaCheckCircle />}
-                  text="Earn while protecting the environment"
-                />
+                <ImpactItem icon={<FaCheckCircle />} text="Reduce landfill waste by up to 80%" />
+                <ImpactItem icon={<FaCheckCircle />} text="Lower carbon emissions significantly" />
+                <ImpactItem icon={<FaCheckCircle />} text="Support circular economy initiatives" />
+                <ImpactItem icon={<FaCheckCircle />} text="Earn while protecting the environment" />
               </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+            </motion.div>
+
+            <motion.div
+              className="eco-glass-strong rounded-2xl p-8"
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               <h3 className="text-2xl font-bold mb-6">
                 Your Potential Monthly Impact
               </h3>
@@ -273,131 +258,74 @@ const Home = () => {
                 <ImpactMetric label="Water Saved" value="3,500 L" />
                 <ImpactMetric label="EcoPoints Earned" value="850 pts" />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* CTA SECTION */}
-      <section className="py-24 px-6 bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 text-white text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+      <section className="eco-dark py-24 px-6 text-center relative overflow-hidden border-t border-emerald-500/10">
+        <FloatingLeaves />
+        <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto relative z-10">
+        <motion.div
+          className="max-w-4xl mx-auto relative z-10"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="inline-block mb-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-full text-sm font-bold">
             🎉 LIMITED TIME OFFER
           </div>
-          <h2 className="text-4xl md:text-6xl font-extrabold mb-6">
+          <h2 className="text-4xl md:text-6xl font-extrabold mb-6 text-white">
             Join the Green Revolution Today! 🌍
           </h2>
-          <p className="mb-10 text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="mb-10 text-xl eco-muted max-w-2xl mx-auto">
             Start recycling smarter, earn rewards, and become part of a
             community committed to sustainable living.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="group bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-orange-500/50 flex items-center justify-center gap-2">
+            <Link
+              to="/register"
+              className="group bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-orange-500/50 flex items-center justify-center gap-2"
+            >
               Create Free Account
               <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="border-2 border-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white hover:text-green-900 transition-all duration-300">
+            </Link>
+            <button className="border-2 border-white/70 px-10 py-5 rounded-xl font-bold text-lg text-white hover:bg-white hover:text-green-900 transition-all duration-300">
               Schedule a Demo
             </button>
           </div>
-          <p className="mt-6 text-sm text-gray-400">
+          <p className="mt-6 text-sm eco-muted">
             ✓ No credit card required ✓ 500 EcoPoints welcome bonus ✓ Cancel
             anytime
           </p>
-        </div>
+        </motion.div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-gray-950 text-gray-400 py-12 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="text-white font-bold text-xl mb-4 flex items-center gap-2">
-                <FaRecycle className="text-green-500" />
-                GreenLoop
-              </h3>
-              <p className="text-sm">
-                Making recycling accessible, rewarding, and impactful for
-                everyone.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Platform</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    How it Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Features
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-green-400 transition">
-                    Cookie Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>
-              © {new Date().getFullYear()} GreenLoop. All rights reserved. |
-              Made with 💚 for a sustainable future
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
+
+// COMPONENT: SectionIntro
+const SectionIntro = ({ badge, title, highlight, subtitle }) => (
+  <motion.div variants={fadeUp} className="text-center mb-16">
+    <div className="inline-block px-4 py-2 eco-glass rounded-full text-sm font-semibold mb-4 text-emerald-300">
+      {badge}
+    </div>
+    <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+      {title}{" "}
+      {highlight && <span className="eco-gradient-text">{highlight}</span>}
+    </h2>
+    {subtitle && (
+      <p className="text-xl eco-muted max-w-2xl mx-auto">{subtitle}</p>
+    )}
+  </motion.div>
+);
 
 // COMPONENT: StatCard
 const StatCard = ({ number, label }) => (
@@ -410,51 +338,54 @@ const StatCard = ({ number, label }) => (
 );
 
 // COMPONENT: FeatureCard
-const FeatureCard = ({ icon, title, description, gradient }) => (
-  <div className="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-green-200 hover:-translate-y-2">
-    <div
-      className={`inline-block p-4 rounded-xl bg-gradient-to-br ${gradient} text-white mb-6 group-hover:scale-110 transition-transform duration-300`}
-    >
+const FeatureCard = ({ icon, title, description }) => (
+  <motion.div
+    variants={fadeUp}
+    whileHover={{ y: -6 }}
+    className="group eco-glass rounded-2xl p-8 transition-shadow duration-300 hover:shadow-2xl hover:shadow-emerald-500/10"
+  >
+    <div className="inline-flex p-4 rounded-xl eco-gradient-btn text-white mb-6 group-hover:scale-110 transition-transform duration-300">
       {icon}
     </div>
-    <h3 className="text-2xl font-bold mb-3 text-gray-900">{title}</h3>
-    <p className="text-gray-600 leading-relaxed">{description}</p>
-  </div>
+    <h3 className="text-2xl font-bold mb-3 text-white">{title}</h3>
+    <p className="eco-muted leading-relaxed">{description}</p>
+  </motion.div>
 );
 
 // COMPONENT: StepCard
 const StepCard = ({ number, title, description, icon }) => (
-  <div className="relative text-center group">
-    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl font-black text-green-100 group-hover:text-green-200 transition-colors">
+  <motion.div variants={fadeUp} className="relative text-center group">
+    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl font-black text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors">
       {number}
     </div>
-    <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-gray-100 hover:border-green-300">
-      <div className="text-4xl text-green-600 mb-4 relative z-10">{icon}</div>
-      <h3 className="text-xl font-bold mb-2 text-gray-900">{title}</h3>
-      <p className="text-gray-600 text-sm">{description}</p>
+    <div className="relative eco-glass rounded-2xl p-8 transition-all duration-300 hover:shadow-xl">
+      <div className="text-4xl text-emerald-400 mb-4 relative z-10">{icon}</div>
+      <h3 className="text-xl font-bold mb-2 text-white">{title}</h3>
+      <p className="eco-muted text-sm">{description}</p>
     </div>
-  </div>
+  </motion.div>
 );
 
 // COMPONENT: RoleCard
-const RoleCard = ({ emoji, title, features, color }) => (
-  <div className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-gray-100 hover:border-transparent hover:-translate-y-2 overflow-hidden relative">
-    <div
-      className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-    ></div>
+const RoleCard = ({ emoji, title, features }) => (
+  <motion.div
+    variants={fadeUp}
+    whileHover={{ y: -6 }}
+    className="group eco-glass rounded-2xl p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10"
+  >
     <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
       {emoji}
     </div>
-    <h3 className="text-2xl font-bold mb-4 text-gray-900">{title}</h3>
+    <h3 className="text-2xl font-bold mb-4 text-white">{title}</h3>
     <ul className="space-y-2">
       {features.map((feature, index) => (
-        <li key={index} className="flex items-center gap-2 text-gray-700">
-          <FaCheckCircle className="text-green-500 flex-shrink-0" />
+        <li key={index} className="flex items-center gap-2 eco-muted">
+          <FaCheckCircle className="text-emerald-400 flex-shrink-0" />
           <span className="text-sm">{feature}</span>
         </li>
       ))}
     </ul>
-  </div>
+  </motion.div>
 );
 
 // COMPONENT: ImpactItem

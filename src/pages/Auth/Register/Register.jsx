@@ -5,6 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import axiosPublic from "../../../api/axiosPublic";
 import Swal from "sweetalert2";
+import { getAuthErrorMessage } from "../../../utils/firebaseErrors";
 
 const Register = () => {
   const {
@@ -14,7 +15,7 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const { registerUser } = useAuth();
+  const { registerUser, updateUserProfile } = useAuth();
   const navigate = useNavigate();
 
   const handleRegistration = async (data) => {
@@ -24,8 +25,16 @@ const Register = () => {
 
       const loggedUser = result.user;
 
+      // Keep Firebase's displayName in sync with the name they entered.
+      try {
+        await updateUserProfile({ displayName: data.name });
+      } catch (nameError) {
+        console.log(nameError);
+      }
+
       // User for MongoDB
       const userInfo = {
+        uid: loggedUser.uid,
         name: data.name,
         email: loggedUser.email,
         role: data.role,
@@ -52,22 +61,25 @@ const Register = () => {
       Swal.fire({
         icon: "error",
         title: "Registration Failed",
-        text: error.message,
+        text: getAuthErrorMessage(error),
       });
     }
   };
 
   return (
-    <div className="card bg-base-100 w-full max-w-md mx-auto shadow-2xl">
-      <h2 className="text-3xl font-bold text-center mt-6">
+    <div className="eco-glass w-full max-w-md mx-auto rounded-3xl">
+      <h2 className="text-3xl font-bold text-center mt-8 text-white">
         Create Your Account
       </h2>
+      <p className="text-center eco-muted text-sm mt-1">
+        Join the recycling movement.
+      </p>
 
       <form
-        className="card-body"
+        className="p-8"
         onSubmit={handleSubmit(handleRegistration)}
       >
-        <fieldset className="fieldset">
+        <fieldset className="fieldset space-y-1">
 
           {/* Name */}
 
@@ -75,7 +87,7 @@ const Register = () => {
 
           <input
             type="text"
-            className="input input-bordered"
+            className="input eco-input w-full"
             placeholder="Enter Your Name"
             {...register("name", {
               required: "Name is required",
@@ -83,16 +95,16 @@ const Register = () => {
           />
 
           {errors.name && (
-            <p className="text-red-500">{errors.name.message}</p>
+            <p className="text-rose-400 text-sm">{errors.name.message}</p>
           )}
 
           {/* Email */}
 
-          <label className="label">Email</label>
+          <label className="label mt-2">Email</label>
 
           <input
             type="email"
-            className="input input-bordered"
+            className="input eco-input w-full"
             placeholder="Enter Email"
             {...register("email", {
               required: "Email is required",
@@ -100,15 +112,15 @@ const Register = () => {
           />
 
           {errors.email && (
-            <p className="text-red-500">{errors.email.message}</p>
+            <p className="text-rose-400 text-sm">{errors.email.message}</p>
           )}
 
           {/* Role */}
 
-          <label className="label">Select Role</label>
+          <label className="label mt-2">Select Role</label>
 
           <select
-            className="select select-bordered"
+            className="select eco-input w-full"
             defaultValue=""
             {...register("role", {
               required: "Role is required",
@@ -136,16 +148,16 @@ const Register = () => {
           </select>
 
           {errors.role && (
-            <p className="text-red-500">{errors.role.message}</p>
+            <p className="text-rose-400 text-sm">{errors.role.message}</p>
           )}
 
           {/* Password */}
 
-          <label className="label">Password</label>
+          <label className="label mt-2">Password</label>
 
           <input
             type="password"
-            className="input input-bordered"
+            className="input eco-input w-full"
             placeholder="Password"
             {...register("password", {
               required: "Password is required",
@@ -157,17 +169,17 @@ const Register = () => {
           />
 
           {errors.password && (
-            <p className="text-red-500">{errors.password.message}</p>
+            <p className="text-rose-400 text-sm">{errors.password.message}</p>
           )}
 
-          <button className="btn btn-success mt-5">
+          <button className="w-full text-white rounded-xl py-3 mt-5 font-semibold eco-gradient-btn">
             Register
           </button>
 
-          <p className="mt-4 text-center">
+          <p className="mt-4 text-center eco-muted">
             Already have an account?{" "}
             <Link
-              className="text-blue-600 font-semibold"
+              className="text-emerald-400 font-semibold hover:text-emerald-300"
               to="/login"
             >
               Login

@@ -9,11 +9,22 @@ const useRole = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.email) return;
+    if (!user?.email) {
+      setRole("");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
 
     axiosPublic.get(`/users/${user.email}`)
       .then(res => {
-        setRole(res.data.role);
+        setRole(res.data?.role || "");
+      })
+      .catch(() => {
+        setRole("");
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [user]);
