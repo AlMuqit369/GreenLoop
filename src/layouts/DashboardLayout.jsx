@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import FloatingLeaves from "../components/FloatingLeaves";
+import NotificationBell from "../components/NotificationBell";
 
 const DashboardLayout = () => {
   return (
@@ -14,9 +15,9 @@ const DashboardLayout = () => {
       {/* Main Content */}
       <div className="drawer-content min-h-screen relative z-10">
 
-        {/* Mobile Navbar */}
-        <div className="navbar eco-glass lg:hidden">
-          <div className="flex-none">
+        {/* Top Bar */}
+        <div className="navbar eco-glass sticky top-0 z-30">
+          <div className="flex-none lg:hidden">
             <label
               htmlFor="dashboard-drawer"
               className="btn btn-square btn-ghost text-emerald-300"
@@ -26,9 +27,13 @@ const DashboardLayout = () => {
           </div>
 
           <div className="flex-1">
-            <h2 className="text-xl font-bold eco-gradient-text">
+            <h2 className="text-xl font-bold eco-gradient-text lg:hidden">
               GreenLoop Dashboard
             </h2>
+          </div>
+
+          <div className="flex-none">
+            <NotificationBell />
           </div>
         </div>
 

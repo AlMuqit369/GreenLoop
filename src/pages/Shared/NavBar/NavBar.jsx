@@ -72,13 +72,6 @@ const NavBar = () => {
               <NavLink to="/" icon={<FaHome />} isActive={isActive("/")}>
                 Home
               </NavLink>
-              <NavLink
-                to="/dashboard"
-                icon={<FaTachometerAlt />}
-                isActive={isActive("/dashboard")}
-              >
-                Dashboard
-              </NavLink>
               {user && (
                 <NavLink
                   to="/campaigns"
@@ -88,11 +81,17 @@ const NavBar = () => {
                   Campaigns
                 </NavLink>
               )}
+              <NavLink
+                to="/dashboard"
+                icon={<FaTachometerAlt />}
+                isActive={isActive("/dashboard")}
+              >
+                Dashboard
+              </NavLink>
             </div>
 
             {/* Right Section - Auth & Profile */}
             <div className="hidden lg:flex items-center gap-3">
-              {user && <NotificationBell />}
               {user ? (
                 <div className="relative">
                   {/* Profile Dropdown Trigger */}
@@ -207,6 +206,7 @@ const NavBar = () => {
                   </Link>
                 </>
               )}
+              {user && <NotificationBell />}
             </div>
 
             {/* Mobile Menu Button */}
@@ -252,13 +252,6 @@ const NavBar = () => {
             >
               Home
             </MobileNavLink>
-            <MobileNavLink
-              to="/dashboard"
-              icon={<FaTachometerAlt />}
-              isActive={isActive("/dashboard")}
-            >
-              Dashboard
-            </MobileNavLink>
             {user && (
               <MobileNavLink
                 to="/campaigns"
@@ -268,6 +261,13 @@ const NavBar = () => {
                 Campaigns
               </MobileNavLink>
             )}
+            <MobileNavLink
+              to="/dashboard"
+              icon={<FaTachometerAlt />}
+              isActive={isActive("/dashboard")}
+            >
+              Dashboard
+            </MobileNavLink>
             {user && (
               <MobileNavLink
                 to="/notifications"

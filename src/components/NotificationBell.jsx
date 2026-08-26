@@ -33,9 +33,9 @@ const NotificationBell = () => {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-xl hover:bg-white/5 transition-colors"
+        className="relative w-11 h-11 flex items-center justify-center rounded-full eco-glass hover:border-emerald-400/50 hover:text-emerald-300 transition-colors"
       >
-        <FaBell className="text-xl text-emerald-300/80" />
+        <FaBell className="text-lg text-emerald-300/80" />
         {unread > 0 && (
           <motion.span
             initial={{ scale: 0 }}

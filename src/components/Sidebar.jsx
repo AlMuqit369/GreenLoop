@@ -69,10 +69,6 @@ const Sidebar = () => {
 
       <ul className="menu p-4 flex-1">
 
-        <NavItem to="/dashboard" icon={<FaTachometerAlt />} active={isActive("/dashboard")}>
-          Dashboard
-        </NavItem>
-
         <NavItem to="/" icon={<FaHome />} active={isActive("/")}>
           Home
         </NavItem>
@@ -81,8 +77,8 @@ const Sidebar = () => {
           Campaigns
         </NavItem>
 
-        <NavItem to="/notifications" icon={<FaBell />} active={isActive("/notifications")}>
-          Notifications
+        <NavItem to="/dashboard" icon={<FaTachometerAlt />} active={isActive("/dashboard")}>
+          Dashboard
         </NavItem>
 
         {role === "Admin" && (
