@@ -420,11 +420,18 @@ app.get("/collectors/:id/stats", async (req, res) => {
   const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const thisMonth = monthlyRaw.find((m) => m._id === monthKey);
 
+  const totalPickups = completed + pending + cancelled;
+  // Success Rate = Completed Pickups / Total Assigned Pickups × 100
+  const successRate = totalPickups
+    ? Math.round((completed / totalPickups) * 1000) / 10
+    : 0;
+
   res.send({
-    totalPickups: completed + pending + cancelled,
+    totalPickups,
     completed,
     pending,
     cancelled,
+    successRate,
     totalWeight,
     totalEarnings,
     wasteByMaterial: wasteByMaterialRaw.map((w) => ({
@@ -466,6 +473,7 @@ app.get("/collector-stats-overview", async (req, res) => {
 
   let totalPickups = 0;
   let completedPickups = 0;
+  let cancelledPickups = 0;
   let totalWaste = 0;
 
   pickupStatusCounts.forEach((s) => {
@@ -473,8 +481,15 @@ app.get("/collector-stats-overview", async (req, res) => {
     if (s._id === "Completed") {
       completedPickups = s.count;
       totalWaste = s.weight;
+    } else if (s._id === "Cancelled") {
+      cancelledPickups = s.count;
     }
   });
+
+  // Success Rate = Completed Pickups / Total Assigned Pickups × 100
+  const overallSuccessRate = totalPickups
+    ? Math.round((completedPickups / totalPickups) * 1000) / 10
+    : 0;
 
   const ratingAgg = await collectorsCollection
     .aggregate([{ $group: { _id: null, avgRating: { $avg: "$rating" } } }])
@@ -486,16 +501,24 @@ app.get("/collector-stats-overview", async (req, res) => {
 
   const leaderboard = await Promise.all(
     collectors.map(async (c) => {
-      const completedCount = await pickupsCollection.countDocuments({
-        collectorId: c._id.toString(),
-        status: "Completed",
-      });
+      const [completedCount, assignedCount] = await Promise.all([
+        pickupsCollection.countDocuments({
+          collectorId: c._id.toString(),
+          status: "Completed",
+        }),
+        pickupsCollection.countDocuments({
+          collectorId: c._id.toString(),
+        }),
+      ]);
 
       return {
         _id: c._id,
         name: c.name,
         rating: c.rating || 0,
         completedPickups: completedCount,
+        successRate: assignedCount
+          ? Math.round((completedCount / assignedCount) * 1000) / 10
+          : 0,
       };
     })
   );
@@ -507,6 +530,8 @@ app.get("/collector-stats-overview", async (req, res) => {
     activeCollectors,
     totalPickups,
     completedPickups,
+    cancelledPickups,
+    successRate: overallSuccessRate,
     avgRating: Math.round(avgRating * 10) / 10,
     totalWaste,
     leaderboard: leaderboard.slice(0, 10),
@@ -895,6 +920,48 @@ app.get("/admin-analytics", async (req, res) => {
 
   const totalWaste = pickupAgg[0]?.totalWaste || 0;
   const completedPickups = pickupAgg[0]?.completedPickups || 0;
+  const cancelledPickups = await pickupsCollection.countDocuments({
+    status: "Cancelled",
+  });
+
+  const mostActiveCollectorAgg = await pickupsCollection
+    .aggregate([
+      { $match: { status: "Completed" } },
+      { $group: { _id: "$collectorId", completed: { $sum: 1 } } },
+      { $sort: { completed: -1 } },
+      { $limit: 1 },
+    ])
+    .toArray();
+
+  let mostActiveCollector = null;
+  if (mostActiveCollectorAgg[0] && ObjectId.isValid(mostActiveCollectorAgg[0]._id)) {
+    const collector = await collectorsCollection.findOne({
+      _id: new ObjectId(mostActiveCollectorAgg[0]._id),
+    });
+    mostActiveCollector = {
+      name: collector?.name || "Unknown",
+      completedPickups: mostActiveCollectorAgg[0].completed,
+    };
+  }
+
+  const mostActiveBusinessAgg = await transactionsCollection
+    .aggregate([
+      { $group: { _id: "$businessId", transactions: { $sum: 1 } } },
+      { $sort: { transactions: -1 } },
+      { $limit: 1 },
+    ])
+    .toArray();
+
+  let mostActiveBusiness = null;
+  if (mostActiveBusinessAgg[0] && ObjectId.isValid(mostActiveBusinessAgg[0]._id)) {
+    const business = await businessesCollection.findOne({
+      _id: new ObjectId(mostActiveBusinessAgg[0]._id),
+    });
+    mostActiveBusiness = {
+      name: business?.businessName || "Unknown",
+      transactions: mostActiveBusinessAgg[0].transactions,
+    };
+  }
 
   const revenueAgg = await transactionsCollection
     .aggregate([{ $group: { _id: null, revenue: { $sum: "$amount" } } }])
@@ -934,6 +1001,10 @@ app.get("/admin-analytics", async (req, res) => {
     material: w._id,
     weightKg: w.weightKg,
   }));
+
+  const mostRecycledMaterial = wasteByMaterial.length
+    ? [...wasteByMaterial].sort((a, b) => b.weightKg - a.weightKg)[0]
+    : null;
 
   const userDistributionRaw = await usersCollection
     .aggregate([{ $group: { _id: "$role", count: { $sum: 1 } } }])
@@ -977,10 +1048,16 @@ app.get("/admin-analytics", async (req, res) => {
       businesses: totalBusinesses,
       totalWaste,
       completedPickups,
+      cancelledPickups,
       transactions: totalTransactions,
       ecoPointsIssued,
       activeCampaigns,
       revenue,
+    },
+    topPerformers: {
+      mostActiveCollector,
+      mostActiveBusiness,
+      mostRecycledMaterial,
     },
     userGrowth,
     wasteByMaterial,

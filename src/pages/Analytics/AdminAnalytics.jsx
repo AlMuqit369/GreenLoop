@@ -24,6 +24,9 @@ import {
   FaStar,
   FaBullhorn,
   FaChartPie,
+  FaTimesCircle,
+  FaTrophy,
+  FaRecycle,
 } from "react-icons/fa";
 import axiosPublic from "../../api/axiosPublic";
 import PageHeader from "../../components/ui/PageHeader";
@@ -84,12 +87,18 @@ const AdminAnalytics = () => {
 
   const {
     totals,
+    topPerformers,
     userGrowth,
     wasteByMaterial,
     userDistribution,
     transactionsByMonth,
     campaignPerformance,
   } = data;
+
+  const pickupOutcome = [
+    { name: "Completed", value: totals.completedPickups },
+    { name: "Cancelled", value: totals.cancelledPickups },
+  ];
 
   return (
     <div>
@@ -106,6 +115,7 @@ const AdminAnalytics = () => {
 
         <StatCard label="Total Waste" value={`${totals.totalWaste} kg`} icon={<FaLeaf />} accent="emerald" delay={0.09} />
         <StatCard label="Completed Pickups" value={totals.completedPickups} icon={<FaCheckCircle />} accent="cyan" delay={0.12} />
+        <StatCard label="Cancelled Pickups" value={totals.cancelledPickups} icon={<FaTimesCircle />} accent="rose" delay={0.13} />
         <StatCard label="Transactions" value={totals.transactions} icon={<FaMoneyBillWave />} accent="violet" delay={0.15} />
 
         <StatCard label="EcoPoints Issued" value={totals.ecoPointsIssued.toLocaleString()} sub="estimated" icon={<FaStar />} accent="amber" delay={0.18} />
@@ -224,9 +234,80 @@ const AdminAnalytics = () => {
         )}
       </ChartCard>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+        <ChartCard title="Completed vs Cancelled Pickups">
+          {totals.completedPickups + totals.cancelledPickups > 0 ? (
+            <ResponsiveContainer width="100%" height={240}>
+              <PieChart>
+                <Pie
+                  data={pickupOutcome}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  <Cell fill="#34d399" />
+                  <Cell fill="#f87171" />
+                </Pie>
+                <Tooltip contentStyle={tooltipStyle} />
+                <Legend wrapperStyle={{ color: "rgba(233,253,245,0.7)" }} />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <EmptyNote />
+          )}
+        </ChartCard>
+
+        <ChartCard title="Top Performers">
+          <div className="space-y-4">
+            <TopPerformerRow
+              icon={<FaTrophy />}
+              label="Most Active Collector"
+              value={
+                topPerformers?.mostActiveCollector
+                  ? `${topPerformers.mostActiveCollector.name} — ${topPerformers.mostActiveCollector.completedPickups} pickups`
+                  : "No data yet"
+              }
+            />
+            <TopPerformerRow
+              icon={<FaBuilding />}
+              label="Most Active Business"
+              value={
+                topPerformers?.mostActiveBusiness
+                  ? `${topPerformers.mostActiveBusiness.name} — ${topPerformers.mostActiveBusiness.transactions} transactions`
+                  : "No data yet"
+              }
+            />
+            <TopPerformerRow
+              icon={<FaRecycle />}
+              label="Most Recycled Material"
+              value={
+                topPerformers?.mostRecycledMaterial
+                  ? `${topPerformers.mostRecycledMaterial.material} — ${topPerformers.mostRecycledMaterial.weightKg} kg`
+                  : "No data yet"
+              }
+            />
+          </div>
+        </ChartCard>
+
+      </div>
+
     </div>
   );
 };
+
+const TopPerformerRow = ({ icon, label, value }) => (
+  <div className="flex items-center gap-4 eco-glass rounded-xl p-4">
+    <span className="text-2xl text-emerald-400">{icon}</span>
+    <div>
+      <p className="text-xs eco-muted uppercase tracking-wide">{label}</p>
+      <p className="text-white/90 font-semibold">{value}</p>
+    </div>
+  </div>
+);
 
 const ChartCard = ({ title, children }) => (
   <GlassPanel>

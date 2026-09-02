@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { FaTruck, FaUserCheck, FaBoxes, FaCheckCircle, FaStar, FaWeightHanging } from "react-icons/fa";
+import { FaTruck, FaUserCheck, FaBoxes, FaCheckCircle, FaStar, FaWeightHanging, FaTimesCircle, FaChartLine } from "react-icons/fa";
 import axiosPublic from "../../api/axiosPublic";
 import Swal from "sweetalert2";
 import PageHeader from "../../components/ui/PageHeader";
@@ -144,11 +144,13 @@ const CollectorPerformance = () => {
       <PageHeader title="Collector Performance" subtitle="Fleet-wide pickup statistics and leaderboard." icon={<FaTruck />} />
 
       {overview && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <StatCard label="Total Collectors" value={overview.totalCollectors} icon={<FaTruck />} accent="emerald" delay={0} />
           <StatCard label="Active Collectors" value={overview.activeCollectors} icon={<FaUserCheck />} accent="blue" delay={0.03} />
           <StatCard label="Total Pickups" value={overview.totalPickups} icon={<FaBoxes />} accent="amber" delay={0.06} />
           <StatCard label="Completed" value={overview.completedPickups} icon={<FaCheckCircle />} accent="cyan" delay={0.09} />
+          <StatCard label="Cancelled" value={overview.cancelledPickups} icon={<FaTimesCircle />} accent="rose" delay={0.1} />
+          <StatCard label="Success Rate" value={`${overview.successRate}%`} icon={<FaChartLine />} accent="blue" delay={0.11} />
           <StatCard label="Avg Rating" value={`${overview.avgRating} ⭐`} icon={<FaStar />} accent="violet" delay={0.12} />
           <StatCard label="Total Waste" value={`${overview.totalWaste} kg`} icon={<FaWeightHanging />} accent="rose" delay={0.15} />
         </div>
@@ -160,7 +162,7 @@ const CollectorPerformance = () => {
           <div className="overflow-x-auto">
             <table className="table eco-table">
               <thead>
-                <tr><th>#</th><th>Name</th><th>Completed Pickups</th><th>Rating</th></tr>
+                <tr><th>#</th><th>Name</th><th>Completed Pickups</th><th>Success Rate</th><th>Rating</th></tr>
               </thead>
               <tbody>
                 {overview.leaderboard.map((c, i) => (
@@ -168,6 +170,7 @@ const CollectorPerformance = () => {
                     <td>{i + 1}</td>
                     <td>{c.name}</td>
                     <td>{c.completedPickups}</td>
+                    <td>{c.successRate}%</td>
                     <td>{c.rating} ⭐</td>
                   </tr>
                 ))}

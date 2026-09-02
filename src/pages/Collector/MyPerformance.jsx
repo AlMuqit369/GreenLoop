@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { FaTruck, FaBoxes, FaCheckCircle, FaClock, FaTimesCircle, FaWeightHanging, FaMoneyBillWave, FaStar } from "react-icons/fa";
+import { FaTruck, FaBoxes, FaCheckCircle, FaClock, FaTimesCircle, FaWeightHanging, FaMoneyBillWave, FaStar, FaChartLine } from "react-icons/fa";
 import axiosPublic from "../../api/axiosPublic";
 import useAuth from "../../hooks/useAuth";
 import PageHeader from "../../components/ui/PageHeader";
@@ -108,7 +108,8 @@ const MyPerformance = () => {
         <StatCard label="Cancelled" value={stats?.cancelled || 0} icon={<FaTimesCircle />} accent="rose" delay={0.15} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatCard label="Success Rate" value={`${stats?.successRate || 0}%`} icon={<FaChartLine />} accent="blue" delay={0.18} />
         <StatCard label="Total Weight" value={`${stats?.totalWeight || 0} kg`} icon={<FaWeightHanging />} accent="cyan" delay={0.2} />
         <StatCard label="Total Earnings" value={`৳${stats?.totalEarnings || 0}`} icon={<FaMoneyBillWave />} accent="emerald" delay={0.25} />
         <StatCard label="Average Rating" value={`${collector.rating} ⭐`} icon={<FaStar />} accent="violet" delay={0.3} />
