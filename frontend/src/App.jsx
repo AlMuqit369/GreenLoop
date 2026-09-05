@@ -15,6 +15,10 @@ import Transactions from './pages/Transactions';
 import EcoPoints from './pages/EcoPoints';
 import RewardRedemption from './pages/RewardRedemption';
 import AdminRewards from './pages/AdminRewards';
+import ImpactDashboard from './pages/ImpactDashboard';
+import Goals from './pages/Goals';
+import Certificates from './pages/Certificates';
+import CertificateView from './pages/CertificateView';
 
 const RedirectIfLoggedIn = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -43,6 +47,10 @@ function App() {
             <Route path="/material-guide" element={<MaterialGuide />} />
             <Route path="/ecopoints" element={<EcoPoints />} />
             <Route path="/rewards" element={<RewardRedemption />} />
+            <Route path="/impact" element={<ImpactDashboard />} />
+            <Route path="/goals" element={<Goals />} />
+            <Route path="/certificates" element={<Certificates />} />
+            <Route path="/certificates/:id" element={<CertificateView />} />
           </Route>
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
             <Route path="/admin/categories" element={<AdminCategories />} />

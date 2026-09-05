@@ -20,6 +20,9 @@ const Navbar = () => {
           <NavLink to="/history" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>History</NavLink>
           <NavLink to="/ecopoints" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>EcoPoints</NavLink>
           <NavLink to="/rewards" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Rewards</NavLink>
+          <NavLink to="/impact" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Impact</NavLink>
+          <NavLink to="/goals" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Goals</NavLink>
+          <NavLink to="/certificates" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Certificates</NavLink>
           <NavLink to="/material-guide" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Material Guide</NavLink>
           {['household','business','admin'].includes(user.role) && (
             <NavLink to="/my-listings" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>My Listings</NavLink>

@@ -54,6 +54,9 @@ app.use('/api/feedback', require('./routes/feedbackRoutes'));
 app.use('/api/ecopoints', require('./routes/ecoPointsRoutes'));
 app.use('/api/rewards', require('./routes/rewardRoutes'));
 app.use('/api/redemptions', require('./routes/redemptionRoutes'));
+app.use('/api/impact', require('./routes/impactRoutes'));
+app.use('/api/goals', require('./routes/goalRoutes'));
+app.use('/api/certificates', require('./routes/certificateRoutes'));
 
 app.use(notFound);
 app.use(errorHandler);
